@@ -29,11 +29,12 @@ class Bandit(gym.Env):
         return 0
     
     def arm_avgs(self):
-        return self.cumulative_reward / (np.linalg.norm(self.cumulative_reward) + 0.000001)
+        return self.cumulative_reward / (self.visits + 0.000001)
 
     def reset(self):
-        self.cumulative_reward = np.zeros(self.n_arms)
-        self.regret = []
+        self.cumulative_reward.fill(0)
+        self.regret = [0.]
+        self.visits.fill(0)
     
     def seed(self, seed):
         np.random.seed(seed)
