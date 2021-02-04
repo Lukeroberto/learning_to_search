@@ -40,7 +40,8 @@ def plot_contextual_simulation(trials, env):
     fig, axs = plt.subplots(1, 2)
 
     # State, action visitation
-    sns.heatmap(env.visits / env.visits.sum(axis=0), cmap="Blues", ax=axs[0], vmax=1, vmin=0, cbar=False, annot=True)
+    action_norm = env.visits.sum(axis=1, keepdims=True)
+    sns.heatmap(env.visits / action_norm, cmap="Blues", ax=axs[0], vmax=1, vmin=0, cbar=False, annot=True)
     axs[0].set_title("Arm averages")
 
     # Compare regrets
