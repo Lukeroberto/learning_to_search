@@ -15,6 +15,26 @@ def run_simulation(algo, env, n_steps=1000, n_trials=1):
         regrets[trial] = np.cumsum(env.get_regret())
     return regrets
 
+def plot_avg_reward(axs, env):
+    axs.bar(range(env.n_arms), env.cumulative_reward / (env.visits + 0.001))
+    axs.set_title("Average Reward")
+    axs.set_xlabel("Arm")
+    axs.set_xticks(range(env.n_arms))
+    axs.set_ylim([0, 1])
+
+def plot_cumulative_reward(axs, cumulative_reward):
+    axs.plot(cumulative_reward)
+    axs.set_title("Cumulative Reward")
+    axs.set_xlabel("Step")
+    axs.set_ylim([0, len(cumulative_reward)])
+
+def plot_cumulative_regret(axs, avg_reward, env):
+    cumulative_r = np.cumsum(env.regret)
+    steps = np.arange(len(cumulative_r))
+    axs.plot(steps, cumulative_r, label="You")
+    axs.plot(steps, avg_reward * steps, label="Random")
+    axs.set_title("Regret over time")
+
 def plot_simulation(trials, env):
     names = ["Random", "e-Greedy", "UCB"]
     fig, axs = plt.subplots(1, 2)
