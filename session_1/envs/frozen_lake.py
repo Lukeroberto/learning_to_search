@@ -101,7 +101,6 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
         self.desc = desc = np.asarray(desc, dtype='c')
         self.nrow, self.ncol = nrow, ncol = desc.shape
         self.reward_range = (0, 1)
-
         nA = 4
         nS = nrow * ncol
 
@@ -128,6 +127,7 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
             newrow, newcol = inc(row, col, action)
             newstate = to_s(newrow, newcol)
             newletter = desc[newrow, newcol]
+            curletter = desc[row, col]
             done = bytes(newletter) in b'GH'
             reward = float(newletter == b'G')
             return newstate, reward, done
@@ -154,6 +154,23 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
 
         super(FrozenLakeEnv, self).__init__(nS, nA, P, isd)
 
+    def goal_state(self):
+        return self.nS - 1
+
+    def get_action(self, a):
+        if a == 0:
+            return "LEFT"
+        elif a == 1:
+            return "DOWN"
+        elif a == 2: 
+            return "RIGHT"
+        elif a == 3:
+            return "UP"
+
+    def is_terminal(self, s):
+        row, col = self.s // self.ncol, self.s % self.ncol
+        return True if self.desc[row, col] in b'GH' else False
+        
     def render(self, mode='human'):
         outfile = StringIO() if mode == 'ansi' else sys.stdout
 
@@ -163,16 +180,20 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
         desc[row][col] = utils.colorize(desc[row][col], "red", highlight=True)
         
         lake = np.zeros((self.ncol, self.nrow))
+        
         for i, r in enumerate(desc):
             for j, c in enumerate(r):
                 if (desc[i][j] == "S"):
-                    lake[i, j] = 0
+                    lake[i, j] = 1
                 elif (desc[i][j] == "F"):
                     lake[i, j] = 1
                 elif (desc[i][j] == "H"):
                     lake[i, j] = 2
                 elif (desc[i][j] == "G"):
                     lake[i, j] = 3
+
+        # Current pos
+        lake[row, col] = 0
 
         # Custom color palette
         start = sns.color_palette("YlGn", 10)[9]
@@ -183,7 +204,7 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
         custom = [start, ice, hole, end]
 
         # Visualize
-        sns.heatmap(lake, cmap=custom, cbar=False, xticklabels=False, yticklabels=False, square=True)
+        sns.heatmap(lake, cmap=custom, cbar=False, xticklabels=False, yticklabels=False, square=True, vmin=0, vmax=3)
         plt.title(f"Frozen Lake {self.ncol}x{self.nrow}")
         
         plt.show()
