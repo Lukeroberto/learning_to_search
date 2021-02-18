@@ -21,5 +21,6 @@ def value_iteration(env, gamma=1, tol=0.01):
     return v
 
 def plot_value_function(v, env):
+    plt.figure(figsize=(15, 8))
     sns.heatmap(v.reshape((env.nrow, env.ncol)), cmap="Blues", cbar=False, yticklabels=False, xticklabels=False,annot=True)
     plt.show()

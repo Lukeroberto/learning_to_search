@@ -171,7 +171,7 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
         row, col = self.s // self.ncol, self.s % self.ncol
         return True if self.desc[row, col] in b'GH' else False
         
-    def render(self, mode='human'):
+    def render(self, save=False, ind=0, mode='human'):
         outfile = StringIO() if mode == 'ansi' else sys.stdout
 
         row, col = self.s // self.ncol, self.s % self.ncol
@@ -207,4 +207,7 @@ class FrozenLakeEnv(discrete.DiscreteEnv):
         sns.heatmap(lake, cmap=custom, cbar=False, xticklabels=False, yticklabels=False, square=True, vmin=0, vmax=3)
         plt.title(f"Frozen Lake {self.ncol}x{self.nrow}")
         
-        plt.show()
+        if save:
+            plt.savefig(f"assets/frozen_lake/step_{ind}.png")
+        else:
+            plt.show()

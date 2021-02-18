@@ -27,6 +27,7 @@ class ContextualBandit(gym.Env):
         self.cumulative_reward = np.zeros((self.n_states, self.n_arms))
         self.visits = np.zeros((self.n_states, self.n_arms))
         self.regret = [0.]
+        self.state = np.random.randint(self.n_states)
     
     def step(self, action):
         assert action < self.n_arms and action >= 0
@@ -36,7 +37,8 @@ class ContextualBandit(gym.Env):
         
         if np.random.random() < self.probs[self.state, action]:
             self.cumulative_reward[self.state, action] += 1
-            return 1
+            self.state = np.random.randint(self.n_states)
+            return 1, self.state
 
         # next state
         self.state = np.random.randint(self.n_states)
