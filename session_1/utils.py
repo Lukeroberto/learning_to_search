@@ -35,6 +35,16 @@ def plot_avg_reward(axs, env):
     axs.set_xticks(range(env.n_arms))
     axs.set_ylim([0, 1])
 
+def plot_avg_reward_contextual(axs, env):
+    # State, action visitation  
+    values = env.cumulative_reward
+    visits = env.visits.sum(axis=1, keepdims=True)
+    sns.heatmap(values / visits, cmap="Blues", ax=axs, vmax=1, vmin=0, cbar=False, annot=True, xticklabels=np.arange(env.n_arms))
+    axs.set_title("Average Reward")
+    axs.set_ylabel("State/Context")
+    axs.set_xlabel("Arm")
+    axs.set_yticklabels(["Red", "Green"])
+
 def plot_cumulative_reward(axs, cumulative_reward):
     axs.plot(cumulative_reward)
     axs.set_title("Cumulative Reward")

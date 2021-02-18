@@ -50,6 +50,7 @@ class ContextualBandit(gym.Env):
         self.visits.fill(0) 
         
         self.state = np.random.randint(self.n_states)
+        return self.state
 
     def arm_avgs(self, state):
         return self.cumulative_reward[state, :] / (self.visits[state, :] + 0.00001)
