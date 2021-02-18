@@ -67,6 +67,7 @@ def plot_simulation(trials, avgs, env):
         axs[1].plot(num_steps, mean, color=color(2 + i), label=names[i])
         axs[1].plot(trial.T, color=color(2 + i), alpha=0.01)
         axs[1].set_title("Cumulative Regret")
+        axs[1].set_xlabel("Step")
         axs[1].legend()
 
     fig.tight_layout()
@@ -78,7 +79,7 @@ def plot_contextual_simulation(trials, avgs, env):
     # State, action visitation
     action_norm = env.visits.sum(axis=1, keepdims=True)
     sns.heatmap(env.visits / action_norm, cmap="Blues", ax=axs[0], vmax=1, vmin=0, cbar=False, annot=True)
-    axs[0].set_title("Arm averages")
+    axs[0].set_title("Arm Pull averages across State")
     axs[0].set_ylabel("State/Context")
     axs[0].set_xlabel("Arm")
     # axs[0].set_xticks(range(env.n_arms))
