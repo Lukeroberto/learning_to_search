@@ -6,6 +6,7 @@ topics:
 * Evolution strategies (ES)
 * Differential evolution
 * Hybridization w/ local search
+* Speciation
 * Multi-modal
 * Multi-objective
 
